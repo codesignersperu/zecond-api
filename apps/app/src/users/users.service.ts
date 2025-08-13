@@ -323,7 +323,7 @@ export class UsersService {
           await this.internalRevenueService.updateTransaction({
             txDetails: {
               transactionId: Number(checkoutSession.metadata.transactionId),
-              statusToUpdate: 'payment-failed',
+              statusToUpdate: 'payment_failed',
             },
             balanceUpdate: {
               crossTransfer: undefined,

@@ -353,7 +353,7 @@ export class OrdersService {
               await this.internalRevenueService.updateTransaction({
                 txDetails: {
                   transactionId: trx.id,
-                  statusToUpdate: 'payment-failed',
+                  statusToUpdate: 'payment_failed',
                 },
                 balanceUpdate: {
                   crossTransfer: undefined,
@@ -368,7 +368,7 @@ export class OrdersService {
               await this.internalRevenueService.updateTransaction({
                 txDetails: {
                   transactionId: trx.id,
-                  statusToUpdate: 'payment-failed',
+                  statusToUpdate: 'payment_failed',
                 },
                 balanceUpdate: {
                   crossTransfer: undefined,
