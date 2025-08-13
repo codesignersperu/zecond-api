@@ -146,7 +146,7 @@ export class RevenueService {
           accountId: data.accountId,
           statusToSet: 'pending',
         },
-        type: 'available-to-locked',
+        type: 'available_to_locked',
       });
     } catch (e) {
       throw new BadRequestException('Operation failed: ' + e.message);

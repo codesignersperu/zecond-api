@@ -114,7 +114,7 @@ export class InternalRevenueService {
     };
 
     if (
-      params.type === 'available-to-locked' ||
+      params.type === 'available_to_locked' ||
       params.type === 'locked-to-available'
     ) {
       auditInsert.crossBalanceTransfer = params.type;
@@ -135,7 +135,7 @@ export class InternalRevenueService {
       txAuditId: txAuditInsert.id,
       amount: params.txDetails.amount,
       balanceUpdate:
-        params.type === 'available-to-locked' ||
+        params.type === 'available_to_locked' ||
         params.type === 'locked-to-available'
           ? { crossTransfer: params.type }
           : {
@@ -369,7 +369,7 @@ export class InternalRevenueService {
     if (params.balanceUpdate.crossTransfer) {
       let available =
         params.prevBalance.availableBalance +
-        (params.balanceUpdate.crossTransfer === 'available-to-locked'
+        (params.balanceUpdate.crossTransfer === 'available_to_locked'
           ? -params.amount
           : params.amount);
       let locked =
