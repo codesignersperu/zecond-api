@@ -319,7 +319,7 @@ export class RevenueService {
         await this.internalRevenueService.updateTransaction({
           txDetails: { transactionId: trx.id, statusToUpdate: 'succeeded' },
           balanceUpdate: {
-            crossTransfer: 'locked-to-available',
+            crossTransfer: 'locked_to_available',
           },
         });
       } catch (e) {

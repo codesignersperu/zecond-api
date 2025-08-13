@@ -306,7 +306,7 @@ export class OrdersService {
                   statusToUpdate: 'succeeded',
                 },
                 balanceUpdate: {
-                  crossTransfer: 'locked-to-available',
+                  crossTransfer: 'locked_to_available',
                 },
                 dbTx: tx,
               });

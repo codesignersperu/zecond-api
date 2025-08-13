@@ -88,7 +88,7 @@ export class RevenueService {
           statusToUpdate: 'rejected',
         },
         balanceUpdate: {
-          crossTransfer: 'locked-to-available',
+          crossTransfer: 'locked_to_available',
         },
       });
     }
