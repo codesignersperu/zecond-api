@@ -295,7 +295,7 @@ export class RevenueService {
 
   @Cron(CronExpression.EVERY_HOUR)
   async clearSellersPendingClearanceTransactions() {
-    // Rule: for a pending-clearance transaction to be completed, it's order must be marked as completed too.
+    // Rule: for a pending_clearance transaction to be completed, it's order must be marked as completed too.
 
     let trxs = await this.db
       .select({ id: transactions.id })
@@ -303,7 +303,7 @@ export class RevenueService {
       .where(
         and(
           eq(transactions.type, 'order'),
-          eq(transactions.status, 'pending-clearance'),
+          eq(transactions.status, 'pending_clearance'),
         ),
       )
       .leftJoin(
@@ -326,7 +326,7 @@ export class RevenueService {
         const error = e as Error;
         console.error();
         await this.db.insert(errorLogs).values({
-          message: `Error updating 'pending-clearance' transaction: ${trx.id}: ${error.message}`,
+          message: `Error updating 'pending_clearance' transaction: ${trx.id}: ${error.message}`,
           stackTrace: error.stack,
         });
       }

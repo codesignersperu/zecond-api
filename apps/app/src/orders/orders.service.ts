@@ -294,7 +294,7 @@ export class OrdersService {
               await this.internalRevenueService.updateTransaction({
                 txDetails: {
                   transactionId: trx.id,
-                  statusToUpdate: 'pending-clearance',
+                  statusToUpdate: 'pending_clearance',
                 },
                 dbTx: tx,
               });
