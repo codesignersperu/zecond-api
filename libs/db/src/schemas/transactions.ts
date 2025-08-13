@@ -5,7 +5,7 @@ import {
   orders,
   users,
   userSubscriptions,
-  zecondOrUser,
+  platformOrUser,
   withdrawalAccounts,
   products,
   transactionsAudit,
@@ -35,7 +35,7 @@ export const transactions = pgTable('transactions', {
   id: bigint({ mode: 'number' })
     .primaryKey()
     .generatedByDefaultAsIdentity({ startWith: 1000 }),
-  for: zecondOrUser().notNull(),
+  for: platformOrUser().notNull(),
   type: transactionType().notNull(),
   userId: bigint({ mode: 'number' }).references(() => users.id),
   balanceId: bigint({ mode: 'number' }).references(() => balances.id),

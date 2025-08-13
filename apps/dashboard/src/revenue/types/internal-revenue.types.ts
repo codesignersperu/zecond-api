@@ -21,8 +21,8 @@ type SubscriptionTransaction = {
   subscriptionId: number;
 };
 
-type TuyoTransaction = {
-  for: Extract<Transaction['for'], 'zecond'>;
+type PlatformTransaction = {
+  for: Extract<Transaction['for'], 'platform'>;
 };
 
 type UserTransaction = {
@@ -33,7 +33,7 @@ type UserTransaction = {
 type TransactionParam = {
   amount: number;
   statusToSet: Transaction['status'];
-} & (TuyoTransaction | UserTransaction) &
+} & (PlatformTransaction | UserTransaction) &
   (OrderTransaction | SubscriptionTransaction | WithdrawalTransaction);
 
 export type BalanceUpdate = { validate?: true } & (

@@ -275,7 +275,7 @@ export class UsersService {
           // Adding Transaction
           transaction = await this.internalRevenueService.createTransaction({
             txDetails: {
-              for: 'zecond',
+              for: 'platform',
               type: 'subscription',
               subscriptionId: userSubscription?.id || 0,
               amount: checkoutSession.amount_total

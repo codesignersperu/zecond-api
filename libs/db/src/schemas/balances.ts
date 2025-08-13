@@ -1,11 +1,11 @@
 import { InferSelectModel, relations } from 'drizzle-orm';
 import { pgTable, bigint, decimal, PgColumn } from 'drizzle-orm/pg-core';
-import { balancesAudit, transactions, zecondOrUser, users } from '.';
+import { balancesAudit, transactions, platformOrUser, users } from '.';
 import { timestamps } from './timestamps.helper';
 
 export const balances = pgTable('balances', {
   id: bigint({ mode: 'number' }).primaryKey().generatedByDefaultAsIdentity(),
-  for: zecondOrUser().notNull(),
+  for: platformOrUser().notNull(),
   userId: bigint({ mode: 'number' }).references((): PgColumn => users.id),
   availableBalance: decimal({ precision: 10, scale: 2, mode: 'number' })
     .notNull()

@@ -3,7 +3,7 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { DashboardModule } from '@dashboard/dashboard.module';
 
-describe('TuyoDashboardController (e2e)', () => {
+describe('PlatformDashboardController (e2e)', () => {
   let app: INestApplication;
 
   beforeEach(async () => {

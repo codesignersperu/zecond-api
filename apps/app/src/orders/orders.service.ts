@@ -176,8 +176,8 @@ export class OrdersService {
             ? product.bids[0].amount
             : product.price;
 
-          let zecondCommission = (price * commissionPercent) / 100;
-          let usersSale = price - zecondCommission;
+          let platformCommission = (price * commissionPercent) / 100;
+          let usersSale = price - platformCommission;
 
           // Users transaction
           await this.internalRevenueService.createTransaction({
@@ -194,15 +194,15 @@ export class OrdersService {
             dbTx: tx,
           });
 
-          if (zecondCommission) {
-            // Tuyo Transaction
+          if (platformCommission) {
+            // Platform Transaction
             await this.internalRevenueService.createTransaction({
               txDetails: {
-                for: 'zecond',
+                for: 'platform',
                 type: 'order',
                 orderId: order.id,
                 productId: product.id,
-                amount: zecondCommission,
+                amount: platformCommission,
                 statusToSet: 'processing',
               },
               type: 'locked',
@@ -299,7 +299,7 @@ export class OrdersService {
                 dbTx: tx,
               });
             }
-            if (trx.for === 'zecond') {
+            if (trx.for === 'platform') {
               await this.internalRevenueService.updateTransaction({
                 txDetails: {
                   transactionId: trx.id,
@@ -364,7 +364,7 @@ export class OrdersService {
                 dbTx: tx,
               });
             }
-            if (trx.for === 'zecond') {
+            if (trx.for === 'platform') {
               await this.internalRevenueService.updateTransaction({
                 txDetails: {
                   transactionId: trx.id,
