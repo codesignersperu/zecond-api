@@ -22,7 +22,7 @@ type SubscriptionTransaction = {
 };
 
 type TuyoTransaction = {
-  for: Extract<Transaction['for'], 'tuyo'>;
+  for: Extract<Transaction['for'], 'zecond'>;
 };
 
 type UserTransaction = {

@@ -35,7 +35,7 @@ export class StoreConfigController {
   // Brands
   @Get('brands')
   @ApiOperation({
-    summary: 'Returns a List of all the brands listed on TUYO',
+    summary: 'Returns a List of all the brands listed on ZECOND',
   })
   brandsFindAll() {
     return this.brandsService.findAll();
@@ -53,7 +53,7 @@ export class StoreConfigController {
   @Get('categories-subcategories')
   @ApiOperation({
     summary:
-      'Returns a List of all the product categories with their respective IDs listed on TUYO',
+      'Returns a List of all the product categories with their respective IDs listed on ZECOND',
   })
   categoriesFindAll() {
     return this.categoriesService.findAll();

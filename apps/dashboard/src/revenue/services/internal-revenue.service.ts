@@ -49,9 +49,9 @@ export class InternalRevenueService {
     let { dbTx: tx } = params;
 
     let prevBalance: Balance | undefined;
-    if (params.txDetails.for === 'tuyo')
+    if (params.txDetails.for === 'zecond')
       prevBalance = await tx.query.balances.findFirst({
-        where: eq(balances.for, 'tuyo'),
+        where: eq(balances.for, 'zecond'),
       });
     else if (params.txDetails.for === 'user')
       prevBalance = await tx.query.balances.findFirst({
@@ -60,8 +60,8 @@ export class InternalRevenueService {
 
     if (!prevBalance)
       throw new Error(
-        'Balance record not found for: ' + params.txDetails.for === 'tuyo'
-          ? 'tuyo'
+        'Balance record not found for: ' + params.txDetails.for === 'zecond'
+          ? 'zecond'
           : params.txDetails.for === 'user'
             ? params.txDetails.userId.toString()
             : undefined,
@@ -217,9 +217,9 @@ export class InternalRevenueService {
 
     if (params.balanceUpdate) {
       let prevBalance: Balance | undefined;
-      if (prevTrx.for === 'tuyo')
+      if (prevTrx.for === 'zecond')
         prevBalance = await tx.query.balances.findFirst({
-          where: eq(balances.for, 'tuyo'),
+          where: eq(balances.for, 'zecond'),
         });
       else if (prevTrx.for === 'user')
         prevBalance = await tx.query.balances.findFirst({
@@ -228,8 +228,8 @@ export class InternalRevenueService {
 
       if (!prevBalance)
         throw new Error(
-          'Balance record not found for: ' + prevTrx.for === 'tuyo'
-            ? 'tuyo'
+          'Balance record not found for: ' + prevTrx.for === 'zecond'
+            ? 'zecond'
             : prevTrx.for === 'user'
               ? prevTrx.userId?.toString()
               : undefined,

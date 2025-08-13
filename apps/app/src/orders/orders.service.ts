@@ -176,8 +176,8 @@ export class OrdersService {
             ? product.bids[0].amount
             : product.price;
 
-          let tuyoCommission = (price * commissionPercent) / 100;
-          let usersSale = price - tuyoCommission;
+          let zecondCommission = (price * commissionPercent) / 100;
+          let usersSale = price - zecondCommission;
 
           // Users transaction
           await this.internalRevenueService.createTransaction({
@@ -194,15 +194,15 @@ export class OrdersService {
             dbTx: tx,
           });
 
-          if (tuyoCommission) {
+          if (zecondCommission) {
             // Tuyo Transaction
             await this.internalRevenueService.createTransaction({
               txDetails: {
-                for: 'tuyo',
+                for: 'zecond',
                 type: 'order',
                 orderId: order.id,
                 productId: product.id,
-                amount: tuyoCommission,
+                amount: zecondCommission,
                 statusToSet: 'processing',
               },
               type: 'locked',
@@ -299,7 +299,7 @@ export class OrdersService {
                 dbTx: tx,
               });
             }
-            if (trx.for === 'tuyo') {
+            if (trx.for === 'zecond') {
               await this.internalRevenueService.updateTransaction({
                 txDetails: {
                   transactionId: trx.id,
@@ -364,7 +364,7 @@ export class OrdersService {
                 dbTx: tx,
               });
             }
-            if (trx.for === 'tuyo') {
+            if (trx.for === 'zecond') {
               await this.internalRevenueService.updateTransaction({
                 txDetails: {
                   transactionId: trx.id,

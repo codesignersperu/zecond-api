@@ -272,7 +272,7 @@ export class AdminsService {
     });
     if (!admin) throw new NotFoundException("Admin doesn't exist");
 
-    if (admin.email === 'admin@tuyo.com')
+    if (admin.email === 'admin@zecond.com')
       throw new BadRequestException("Can't delete root admin");
 
     const [deleted] = await this.db

@@ -15,8 +15,8 @@ async function bootstrap() {
   });
 
   const config = new DocumentBuilder()
-    .setTitle('TUYO API')
-    .setDescription('Documentation for the TUYO API endpoints')
+    .setTitle('ZECOND API')
+    .setDescription('Documentation for the ZECOND API endpoints')
     .setVersion('1.0')
     .addBearerAuth()
     .build();

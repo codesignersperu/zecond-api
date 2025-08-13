@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 const getSubscriptionsQuerySchema = z
   .object({
-    plan: z.enum(['tuyo-black', 'todo-tuyo']),
+    plan: z.enum(['zecond-black', 'todo-zecond']),
     userId: z.coerce.number(),
   })
   .partial()
