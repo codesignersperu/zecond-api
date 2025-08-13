@@ -4,8 +4,10 @@ import {
   balances,
   bids,
   brands,
+  categories,
   colors,
   orders,
+  productImages,
   products,
   subcategories,
   subscriptionPlans,
@@ -28,6 +30,7 @@ import { and, desc, eq, isNull, or } from 'drizzle-orm';
 import * as dayjs from 'dayjs';
 import { generateRandomHex, isObjEmpty } from '@libs/global/utils';
 import { AuthService } from '@libs/auth';
+import { Entries } from 'type-fest';
 
 @Injectable()
 export class ControlsService {
