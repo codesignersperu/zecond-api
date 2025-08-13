@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2022",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "paths": {
+      "@app": ["apps/app/src"],
+      "@app/*": ["apps/app/src/*"],
+      "@dashboard": ["apps/dashboard/src"],
+      "@dashboard/*": ["apps/dashboard/src/*"],
+      "@libs/background-jobs": ["libs/background-jobs/src"],
+      "@libs/background-jobs/*": ["libs/background-jobs/src/*"],
+      "@libs/auth": ["libs/auth/src"],
+      "@libs/auth/*": ["libs/auth/src/*"],
+      "@libs/config": ["libs/config/src"],
+      "@libs/config/*": ["libs/config/src/*"],
+      "@libs/db": ["libs/db/src"],
+      "@libs/db/*": ["libs/db/src/*"],
+      "@libs/global": ["libs/global"],
+      "@libs/global/*": ["libs/global/*"]
+    },
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "noFallthroughCasesInSwitch": false
+  }
+}
