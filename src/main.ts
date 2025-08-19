@@ -2,12 +2,14 @@ import { NestFactory } from '@nestjs/core';
 import { MainModule } from './main.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { VersioningType } from '@nestjs/common';
+import helmet from 'helmet';
 
 async function bootstrap() {
   const app = await NestFactory.create(MainModule, {
     rawBody: true,
+    cors: true,
   });
-  app.enableCors();
+  // app.use(helmet());
   app.enableVersioning({
     type: VersioningType.URI,
     defaultVersion: '1',
