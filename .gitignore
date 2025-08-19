@@ -10,8 +10,8 @@ dist/
 .LSOverride
 ._*
 
-# TODO: remove migrations from  here when the app is ready
-/libs/db/src/migrations
+# db migrations
+/src/db/migrations
 
 uploads/
 
