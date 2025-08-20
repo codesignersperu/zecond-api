@@ -4,7 +4,7 @@ import type { Database } from 'src/db/types';
 import { authSessions, users } from 'src/db/schemas';
 import { and, eq, lt } from 'drizzle-orm';
 import { ConfigService } from '@nestjs/config';
-import { Timeout, Cron, CronExpression } from '@nestjs/schedule';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import { JwtService } from '@nestjs/jwt';
 import { hash, verify } from '@node-rs/argon2';
 import { v4 as uuidv4 } from 'uuid';
@@ -154,7 +154,6 @@ export class AuthService {
     ]);
   }
 
-  @Timeout(3000)
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   private async cleanUpExpiredAuthSessions() {
     await this.db
