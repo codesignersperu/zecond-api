@@ -7,10 +7,9 @@ import type { AuthModuleAsyncOptions } from './types';
 
 @Module({})
 export class AuthModule {
-  static forRoot(options: AuthModuleAsyncOptions): DynamicModule {
+  static register(options: AuthModuleAsyncOptions): DynamicModule {
     return {
       module: AuthModule,
-      global: true,
       imports: [JwtModule.register({})],
       providers: [
         {

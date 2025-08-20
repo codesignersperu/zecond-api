@@ -13,14 +13,6 @@ import { RevenueModule } from './revenue/revenue.module';
 
 @Module({
   imports: [
-    AuthModule.forRoot({
-      useFactory: (configService: ConfigService) => {
-        return {
-          jwtSecret: configService.get('JWT_SECRET') as string,
-        };
-      },
-      inject: [ConfigService],
-    }),
     UsersModule,
     ProductsModule,
     AddressesModule,
