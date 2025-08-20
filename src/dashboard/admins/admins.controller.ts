@@ -17,8 +17,11 @@ import { ParseAnythingPipe } from 'src/lib/pipes';
 import { AdminAuditLogsOperations } from 'src/db/schemas';
 import { AuditLogTimeFrame } from './types';
 import { AuthGuard } from 'src/auth/guards';
+import { Roles } from 'src/auth/decorators/roles-decorator';
+import { Role } from 'src/auth/enums';
 
 @UseGuards(AuthGuard)
+@Roles([Role.ADMIN])
 @Controller('dashboard/admins')
 export class AdminsController {
   constructor(private readonly adminsService: AdminsService) {}

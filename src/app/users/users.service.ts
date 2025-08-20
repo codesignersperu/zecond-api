@@ -81,6 +81,7 @@ import {
 } from 'src/app/stripe/types';
 import * as dayjs from 'dayjs';
 import { InternalRevenueService as DashboardInternalRevenueService } from 'src/dashboard/revenue/services';
+import { Role } from 'src/auth/enums';
 
 @Injectable()
 export class UsersService {
@@ -175,10 +176,13 @@ export class UsersService {
     // Subscribing user to free plan
     await this.stripeService.subscribeUserToFreePlan(user.id);
 
-    const token = await this.authService.generateToken({
-      id: user.id,
-      email: user.email,
-    });
+    const token = await this.authService.generateToken(
+      {
+        id: user.id,
+        email: user.email,
+      },
+      { role: Role.USER },
+    );
 
     return {
       statusCode: HttpStatus.CREATED,
@@ -216,11 +220,13 @@ export class UsersService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const token = await this.authService.generateToken({
-      id: user.id,
-      email: user.email,
-    });
-
+    const token = await this.authService.generateToken(
+      {
+        id: user.id,
+        email: user.email,
+      },
+      { role: Role.USER },
+    );
     return {
       statusCode: HttpStatus.OK,
       status: ApiStatus.SUCCESS,
@@ -430,10 +436,13 @@ export class UsersService {
     };
 
     if (userExists) {
-      const token = await this.authService.generateToken({
-        id: userExists.id,
-        email: user.emails[0].value,
-      });
+      const token = await this.authService.generateToken(
+        {
+          id: userExists.id,
+          email: user.emails[0].value,
+        },
+        { role: Role.USER },
+      );
       response.url += token;
     } else {
       const signupResponse = await this.signup({

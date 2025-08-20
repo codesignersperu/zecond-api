@@ -26,6 +26,7 @@ import type {
 } from './types';
 import { pagination } from 'src/lib/utils';
 import * as dayjs from 'dayjs';
+import { Role } from 'src/auth/enums';
 
 @Injectable()
 export class AdminsService {
@@ -101,7 +102,7 @@ export class AdminsService {
         id: admin.id,
         email: admin.email,
       },
-      { forAdmin: true },
+      { role: Role.ADMIN },
     );
 
     return {

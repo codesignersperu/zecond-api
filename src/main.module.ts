@@ -22,6 +22,7 @@ import { GlobalExceptionFilter } from 'src/lib/filters';
 import { DB_CONNECTION } from 'src/db/db-connection';
 import { AppModule } from 'src/app/app.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -37,7 +38,6 @@ import { DashboardModule } from './dashboard/dashboard.module';
           FRONTEND_URL: z.string(),
           DB_URL: z.string().url(),
           VALKEY_URL: z.string().url(),
-          ADMIN_JWT_SECRET: z.string(),
           JWT_SECRET: z.string(),
           JWT_EXPIRY: z.string().transform((v) => Number(v)),
           SUPPORTED_FILE_TYPES: z.string(),
@@ -87,6 +87,7 @@ Shutting down...`,
     }),
     ScheduleModule.forRoot(),
     DbModule.forRoot(),
+    AuthModule.forRoot(),
     AppModule,
     DashboardModule,
   ],

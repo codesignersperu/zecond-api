@@ -1,21 +1,13 @@
+import { Role } from '../enums';
+
 export type JwtPayload = {
   id: string;
   email: string;
   sessionId: string;
-};
-
-export type AuthModuleOptions = {
-  jwtSecret: string;
-};
-
-export type AuthModuleAsyncOptions = {
-  imports?: any[];
-  useFactory: (
-    ...args: any[]
-  ) => Promise<AuthModuleOptions> | AuthModuleOptions;
-  inject?: any[];
+  role: Role;
 };
 
 export type AuthRequestMetadata = {
   isActiveUserOnly: boolean;
+  roles: Role[];
 };

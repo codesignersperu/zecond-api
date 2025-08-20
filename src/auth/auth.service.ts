@@ -8,17 +8,16 @@ import { Timeout, Cron, CronExpression } from '@nestjs/schedule';
 import { JwtService } from '@nestjs/jwt';
 import { hash, verify } from '@node-rs/argon2';
 import { v4 as uuidv4 } from 'uuid';
-import { ADMIN_SESSION, AUTH_CONFIG_PROVIDER } from './constants';
-import { AuthModuleOptions, JwtPayload } from './types';
+import { ADMIN_SESSION } from './constants';
+import { AuthRequestMetadata, JwtPayload } from './types';
 import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
+import { Role } from './enums';
 
 @Injectable()
 export class AuthService {
   constructor(
     @Inject(DB_CONNECTION)
     private readonly db: Database,
-    @Inject(AUTH_CONFIG_PROVIDER)
-    private readonly authOptions: AuthModuleOptions,
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
     @Inject(CACHE_MANAGER)
@@ -59,17 +58,16 @@ export class AuthService {
    */
   async generateToken(
     payload: { id: number; email: string },
-    config?: { forAdmin?: boolean },
+    config: { role: Role },
   ): Promise<string> {
-    const forAdmin = config && config.forAdmin;
-
+    const forAdmin = config.role === Role.ADMIN;
     const sessionId = forAdmin ? ADMIN_SESSION : uuidv4();
 
     const token = await this.jwtService.signAsync(
-      { ...payload, sessionId },
+      { ...payload, sessionId, role: config.role },
       {
-        secret: this.authOptions.jwtSecret,
-        expiresIn: this.configService.get('JWT_EXPIRY') + 'd',
+        secret: this.configService.getOrThrow('JWT_SECRET'),
+        expiresIn: this.configService.getOrThrow('JWT_EXPIRY') + 'd',
       },
     );
 
@@ -96,8 +94,14 @@ export class AuthService {
    */
   async validateToken(
     payload: JwtPayload,
-    activeUserOnly: boolean,
+    metadata: AuthRequestMetadata,
   ): Promise<JwtPayload> {
+    // checking if payload role satisfies specified role
+    if (!metadata.roles.includes(payload.role))
+      throw new UnauthorizedException(
+        "Unauthorized. your role doesn't allow you this operation",
+      );
+
     // checking if it's admins session
     if (payload.sessionId === ADMIN_SESSION) return payload;
 
@@ -125,7 +129,7 @@ export class AuthService {
     if (!session)
       throw new UnauthorizedException('Invalid token. Please Login Again');
 
-    if (activeUserOnly) {
+    if (metadata.isActiveUserOnly) {
       const user = await this.db.query.users.findFirst({
         where: and(eq(users.status, 'active'), eq(users.id, +payload.id)),
       });
@@ -135,8 +139,6 @@ export class AuthService {
           "You can'nt proceed with this action. Please contact support",
         );
     }
-
-    // TODO: check user's status & take action accordingly
     return payload;
   }
 

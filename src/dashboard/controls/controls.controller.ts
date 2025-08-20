@@ -10,8 +10,11 @@ import { User } from 'src/auth/decorators';
 import { JwtPayload } from 'src/auth/types';
 import { AuthGuard } from 'src/auth/guards';
 import { UseGuards } from '@nestjs/common';
+import { Roles } from 'src/auth/decorators/roles-decorator';
+import { Role } from 'src/auth/enums';
 
 @UseGuards(AuthGuard)
+@Roles([Role.ADMIN])
 @Controller('dashboard/controls')
 export class ControlsController {
   constructor(private readonly controlsService: ControlsService) {}

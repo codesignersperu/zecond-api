@@ -27,9 +27,12 @@ import { User } from 'src/auth/decorators';
 import { generateRandomHex } from 'src/lib/utils';
 import { AuthGuard } from 'src/auth/guards';
 import { UseGuards } from '@nestjs/common';
+import { Role } from 'src/auth/enums';
+import { Roles } from 'src/auth/decorators/roles-decorator';
 
-@Controller('dashboard/store-config')
 @UseGuards(AuthGuard)
+@Roles([Role.ADMIN])
+@Controller('dashboard/store-config')
 @UseInterceptors(CacheInterceptor)
 @CacheTTL(0)
 export class StoreConfigController {
