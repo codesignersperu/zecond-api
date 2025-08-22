@@ -1,4 +1,5 @@
 import { HttpStatus, ParseFilePipeBuilder } from '@nestjs/common';
+import 'dotenv/config';
 
 /**
  * `FileValidatorPipe` function returns the nestjs ParseFilePipeBuilder instance with file validation options.
