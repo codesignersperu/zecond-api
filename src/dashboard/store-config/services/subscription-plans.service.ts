@@ -26,7 +26,7 @@ export class SubscriptionPlansService {
   private readonly API_CACHE_KEYS = [
     '/v1/store-config/subscription-plans',
     SUBSCRIPTION_PLANS_APP_CACHE_KEY,
-    '/v1/store-config/subscription-plans',
+    '/v1/dashboard/store-config/subscription-plans',
   ];
 
   constructor(

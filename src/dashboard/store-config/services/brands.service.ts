@@ -13,7 +13,7 @@ import { diffObject, isObjEmpty } from 'src/lib/utils';
 export class BrandsService {
   private readonly BRANDS_CACHE_KEYS = [
     '/v1/store-config/brands',
-    '/v1/store-config/brands',
+    '/v1/dashboard/store-config/brands',
   ];
 
   constructor(

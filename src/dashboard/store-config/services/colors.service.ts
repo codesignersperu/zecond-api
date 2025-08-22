@@ -19,7 +19,7 @@ import { diffObject, isObjEmpty } from 'src/lib/utils';
 export class ColorsService {
   private readonly COLORS_CACHE_KEYS = [
     '/v1/store-config/colors',
-    '/v1/store-config/colors',
+    '/v1/dashboard/store-config/colors',
   ];
 
   constructor(

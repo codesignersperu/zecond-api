@@ -23,7 +23,7 @@ export class StoreConfigService {
   private readonly CONFIG_CACHE_KEYS = [
     SOTRE_CONFIG_CACHE,
     '/v1/store-config',
-    '/v1/store-config',
+    '/v1/dashboard/store-config',
   ];
 
   constructor(

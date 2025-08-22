@@ -19,7 +19,7 @@ import { diffObject, isObjEmpty } from 'src/lib/utils';
 export class CategoriesService {
   private readonly API_CACHE_KEYS = [
     '/v1/store-config/categories-subcategories',
-    '/v1/store-config/categories-subcategories',
+    '/v1/dashboard/store-config/categories-subcategories',
   ];
 
   constructor(
