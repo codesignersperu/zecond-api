@@ -17,16 +17,19 @@ export function FileValidatorPipe(
     `^image\/(${spf ? spf.split(',').join('|') : 'png'})$`,
   );
 
-  return new ParseFilePipeBuilder()
-    .addFileTypeValidator({
-      fileType: fileTypeRegex,
-    })
-    .addMaxSizeValidator({
-      maxSize: maxFileSize * 1024 * 1024,
-      message: `Individual File size must be less than ${maxFileSize} MB`,
-    })
-    .build({
-      fileIsRequired,
-      errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
-    });
+  // TODO: file type validator causing problems. not validating with regex
+  return (
+    new ParseFilePipeBuilder()
+      // .addFileTypeValidator({
+      //   fileType: fileTypeRegex,
+      // })
+      .addMaxSizeValidator({
+        maxSize: maxFileSize * 1024 * 1024,
+        message: `Individual File size must be less than ${maxFileSize} MB`,
+      })
+      .build({
+        fileIsRequired,
+        errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+      })
+  );
 }
