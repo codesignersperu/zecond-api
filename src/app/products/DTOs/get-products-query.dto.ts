@@ -1,5 +1,5 @@
 import { productSizeEnum } from 'src/db/schemas';
-import { paginationSchema } from 'src/lib/schemas';
+import { coerceBoolean, paginationSchema } from 'src/lib/schemas';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 
@@ -23,9 +23,9 @@ const getProductsQuerySchema = z
     size: z.enum(productSizeEnum.enumValues),
     color: z.string(),
     brand: z.string(),
-    isAuction: z.coerce.boolean(),
-    isFeatured: z.coerce.boolean(),
-    isPremium: z.coerce.boolean(),
+    isAuction: coerceBoolean,
+    isFeatured: coerceBoolean,
+    isPremium: coerceBoolean,
     mode: z.enum(['checkout', 'fetch']),
   })
   .partial()

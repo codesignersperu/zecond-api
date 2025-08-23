@@ -128,6 +128,8 @@ export class ProductsController {
 
   @Get()
   getProducts(@Query() query: GetProductsQueryDTO) {
+    console.log('Here');
+    console.log(query);
     return this.productsService.getProducts(query);
   }
 

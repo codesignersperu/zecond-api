@@ -16,7 +16,6 @@ import {
   GetProductsQueryDTO,
   UpdateProductDto,
 } from './DTOs';
-import { productStatusEnum } from 'src/db/schemas';
 import { FileValidatorPipe, ParseAnythingPipe } from 'src/lib/pipes';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from 'src/lib/config';
