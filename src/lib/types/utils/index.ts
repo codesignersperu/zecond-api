@@ -1,1 +1,2 @@
-export * from './range.type';
+export * from './range.type-util';
+export * from './prettify.type-util';
