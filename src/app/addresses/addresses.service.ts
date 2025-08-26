@@ -183,8 +183,6 @@ export class AddressesService {
       userId,
     });
 
-    console.log({ updateAddressDto });
-
     await this.db
       .update(addresses)
       .set(updateAddressDto)
