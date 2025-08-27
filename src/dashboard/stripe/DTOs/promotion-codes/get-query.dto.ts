@@ -1,4 +1,5 @@
 import { createZodDto } from 'nestjs-zod';
+import { coerceNumber } from 'src/lib/schemas';
 import { z } from 'zod';
 
 const promoCodeForSchema = z.enum(['subscriptions', 'products']);
@@ -6,7 +7,7 @@ const promoCodeForSchema = z.enum(['subscriptions', 'products']);
 export type PromotionCodeFor = z.infer<typeof promoCodeForSchema>;
 
 const getPromotionCodesQuerySchema = z.object({
-  limit: z.coerce.number().min(1).max(100).optional(),
+  limit: coerceNumber.pipe(z.number().min(1).max(100)).optional(),
   startingAfter: z.string().optional(),
   endingBefore: z.string().optional(),
   active: z

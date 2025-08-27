@@ -7,6 +7,7 @@ import { AuthGuard } from 'src/auth/guards';
 import { UseGuards } from '@nestjs/common';
 import { Roles } from 'src/auth/decorators/roles-decorator';
 import { Role } from 'src/auth/enums';
+import { coerceNumber } from 'src/lib/schemas';
 
 @UseGuards(AuthGuard)
 @Roles([Role.ADMIN])
@@ -21,7 +22,7 @@ export class RevenueController {
 
   @Post('withdrawal-action/:id')
   approveWithdrawal(
-    @Param('id', new ZodValidationPipe(z.coerce.number())) id: number,
+    @Param('id', new ZodValidationPipe(coerceNumber)) id: number,
     @Body() body: WithdrawalActionDTO,
   ) {
     return this.revenueService.approveWithdrawal(id, body);

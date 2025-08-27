@@ -1,5 +1,5 @@
 import { productStatusEnum } from 'src/db/schemas';
-import { coerceBoolean, paginationSchema } from 'src/lib/schemas';
+import { coerceBoolean, coerceNumber, paginationSchema } from 'src/lib/schemas';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 
@@ -10,7 +10,7 @@ export const getProductsQuerySchema = z
     isFeatured: coerceBoolean,
     isPremium: coerceBoolean,
     status: z.enum(productStatusEnum.enumValues),
-    userId: z.coerce.number(),
+    userId: coerceNumber,
   })
   .partial()
   .merge(paginationSchema);

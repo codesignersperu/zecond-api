@@ -1,11 +1,11 @@
-import { paginationSchema } from 'src/lib/schemas';
+import { coerceNumber, paginationSchema } from 'src/lib/schemas';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 
 const getSubscriptionsQuerySchema = z
   .object({
     plan: z.enum(['zecond-black', 'todo-zecond']),
-    userId: z.coerce.number(),
+    userId: coerceNumber,
   })
   .partial()
   .merge(paginationSchema);

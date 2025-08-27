@@ -1,5 +1,5 @@
 import { productSizeEnum } from 'src/db/schemas';
-import { coerceBoolean, paginationSchema } from 'src/lib/schemas';
+import { coerceBoolean, coerceNumber, paginationSchema } from 'src/lib/schemas';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 
@@ -15,8 +15,8 @@ const getProductsQuerySchema = z
       .string()
       .regex(/^\d+$/, 'userIdForBid must be a number')
       .transform((v) => parseInt(v)),
-    userId: z.coerce.number(),
-    excludeProduct: z.coerce.number(),
+    userId: coerceNumber,
+    excludeProduct: coerceNumber,
     version: z.enum(['full']),
     category: z.string(),
     subcategory: z.string(),
