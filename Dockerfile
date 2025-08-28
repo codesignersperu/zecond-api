@@ -8,6 +8,8 @@ RUN bun install --frozen-lockfile
 FROM node:22-alpine AS runtime
 WORKDIR /app
 
+RUN apt install vim
+
 # Copy installed dependencies from Bun stage
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
