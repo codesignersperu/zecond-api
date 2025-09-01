@@ -16,8 +16,6 @@ services:
   postgres:
     container_name: zecond-postgres
     image: postgres:17.4
-    ports:
-      - 5432:5432
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=bcdv89023
@@ -31,8 +29,6 @@ services:
   valkey:
     container_name: zecond-valkey
     image: valkey/valkey:8.1
-    ports:
-      - 6380:6379
     networks:
       - zecond_network
     restart: unless-stopped
