@@ -1,0 +1,39 @@
+services:
+  api:
+    container_name: zecond-api
+    build: .
+    ports:
+      - 3000:3001
+    depends_on:
+      - postgres
+      - valkey
+    volumes:
+      - /home/ubuntu/zecond_uploaded_assets:/app/uploads
+    restart: unless-stopped
+
+  postgres:
+    container_name: zecond-postgres
+    image: postgres:17.4
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=bcdv89023
+      - POSTGRES_DB=zecond
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  valkey:
+    container_name: zecond-valkey
+    image: valkey/valkey:8.1
+    ports:
+      - 6379:6379
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  zecond_network:
+    driver: bridge
