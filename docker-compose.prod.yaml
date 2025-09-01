@@ -32,7 +32,7 @@ services:
     container_name: zecond-valkey
     image: valkey/valkey:8.1
     ports:
-      - 6379:6379
+      - 6380:6379
     networks:
       - zecond_network
     restart: unless-stopped
