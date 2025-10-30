@@ -2,7 +2,7 @@ import { Injectable, Inject, UnauthorizedException } from '@nestjs/common';
 import { DB_CONNECTION } from 'src/db/db-connection';
 import type { Database } from 'src/db/types';
 import { authSessions, users } from 'src/db/schemas';
-import { and, eq, lt } from 'drizzle-orm';
+import { and, eq, gt, lt } from 'drizzle-orm';
 import { ConfigService } from '@nestjs/config';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { JwtService } from '@nestjs/jwt';
@@ -116,11 +116,16 @@ export class AuthService {
       [session] = await this.db
         .select({ sessionId: authSessions.id })
         .from(authSessions)
-        .where(eq(authSessions.id, payload.sessionId));
+        .where(
+          and(
+            eq(authSessions.id, payload.sessionId),
+            gt(authSessions.expiresAt, new Date()),
+          ),
+        );
 
       // 3: setting the cache
       if (session)
-        await this.cacheManager.set(
+        session = await this.cacheManager.set(
           `user-auth-session:${payload.id}:${payload.sessionId}`,
           1,
         );
