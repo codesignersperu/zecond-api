@@ -7,6 +7,7 @@ export const baseSchema = createInsertSchema(products, {
   isAuction: z.enum(['true', 'false']).transform((v) => v === 'true'),
 });
 
+export * from './create-product.dto';
 export * from './update-product.dto';
 export * from './product-card-select.dto';
 export * from './bid.dto';

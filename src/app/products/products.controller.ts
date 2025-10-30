@@ -7,6 +7,8 @@ import {
   Patch,
   Param,
   Query,
+  UseInterceptors,
+  UploadedFiles,
 } from '@nestjs/common';
 import { AuthGuard } from 'src/auth/guards';
 import { ProductsService } from './products.service';
@@ -16,16 +18,47 @@ import {
   BidDto,
   BidOpenAPI,
   GetProductsQueryDTO,
+  CreateProductOpenAPI,
+  CreateProductDto,
 } from './DTOs';
-import { ApiBody, ApiOperation } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiOperation } from '@nestjs/swagger';
 import { ActiveUserOnly, User } from 'src/auth/decorators';
 import { PaginationDTO } from 'src/lib/DTOs';
 import { ZodValidationPipe } from 'nestjs-zod';
 import { z } from 'zod';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { multerOptions } from 'src/lib/config';
+import { JwtPayload } from 'src/auth/types';
+import { FileValidatorPipe } from 'src/lib/pipes';
 
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
+
+  @Post()
+  @UseGuards(AuthGuard)
+  @UseInterceptors(
+    FilesInterceptor('images', 10, multerOptions({ destination: './uploads' })),
+  )
+  @ApiOperation({
+    summary: 'Lets users publish their products',
+  })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: CreateProductOpenAPI,
+  })
+  createProduct(
+    @User() user: JwtPayload,
+    @UploadedFiles(FileValidatorPipe(true))
+    images: Array<Express.Multer.File>,
+    @Body() createProductDto: CreateProductDto,
+  ) {
+    return this.productsService.createProduct(
+      +user.id,
+      createProductDto,
+      images,
+    );
+  }
 
   @Post('bid')
   @UseGuards(AuthGuard)

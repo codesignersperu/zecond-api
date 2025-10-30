@@ -11,6 +11,7 @@ import {
   productImages,
   orders,
   orderItems,
+  userSubscriptions,
 } from 'src/db/schemas';
 import {
   BadRequestException,
@@ -19,7 +20,11 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { GetProductsQueryDTO, UpdateProductDto } from './DTOs';
+import {
+  CreateProductDto,
+  GetProductsQueryDTO,
+  UpdateProductDto,
+} from './DTOs';
 import {
   and,
   eq,
@@ -68,6 +73,83 @@ export class ProductsService {
     private readonly productsGateway: ProductsGateway,
     private readonly subscriptionPlansService: SubscriptionPlansService,
   ) {}
+
+  async createProduct(
+    sellerId: number,
+    createProductDto: CreateProductDto,
+    images: Array<Express.Multer.File>,
+  ): ApiResponse {
+    const sellerSubscription = await this.db.query.userSubscriptions.findFirst({
+      where: eq(userSubscriptions.userId, sellerId),
+      columns: {
+        id: true,
+        listingsRemaining: true,
+        planId: true,
+      },
+    });
+
+    if (!sellerSubscription)
+      throw new BadRequestException('Please subscribe to a plan first');
+
+    if (sellerSubscription.listingsRemaining <= 0)
+      throw new BadRequestException(
+        'You have reached your product listing limit',
+      );
+
+    const plans = await this.subscriptionPlansService.get();
+    const plan = plans.find(
+      (plan) => plan.planId === sellerSubscription.planId,
+    );
+
+    if (plan && plan.auctionsAllowed && createProductDto.isAuction)
+      throw new BadRequestException(
+        'Please upgrade your plan to create auctions',
+      );
+
+    await this.db.transaction(async (tx) => {
+      // saving the product
+      const [savedProduct] = await tx
+        .insert(products)
+        .values({
+          ...createProductDto,
+          status: createProductDto.mode === 'draft' ? 'draft' : 'live',
+          sellerId,
+        })
+        .returning({
+          id: products.id,
+          isAuction: products.isAuction,
+          endDate: products.endDate,
+        });
+
+      // saving the images
+      await tx.insert(productImages).values(
+        images.map((image) => ({
+          productId: savedProduct.id,
+          url: '/' + image.path,
+        })),
+      );
+
+      // updating users subscription stats
+      await tx
+        .update(userSubscriptions)
+        .set({ listingsRemaining: sellerSubscription.listingsRemaining - 1 });
+
+      if (savedProduct.isAuction) {
+        // adding product to auctions queue
+        await this.jobsQueueService.addAuctionEndJob(
+          savedProduct.id,
+          savedProduct.endDate as any as string,
+        );
+      }
+    });
+
+    return {
+      statusCode: HttpStatus.CREATED,
+      status: ApiStatus.SUCCESS,
+      message: 'Product published successfully',
+      data: {},
+    };
+  }
 
   async bidOnAuction(
     userId: number,
