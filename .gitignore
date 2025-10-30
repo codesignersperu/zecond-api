@@ -1,8 +1,6 @@
 node_modules/
 dist/
 
-.env
-.env.*
 
 # Apple Files
 .DS_Store
@@ -16,3 +14,4 @@ dist/
 uploads/
 
 dist.zip
+config.bat

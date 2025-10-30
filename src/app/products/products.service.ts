@@ -12,6 +12,7 @@ import {
   orders,
   orderItems,
   userSubscriptions,
+  ProductImage,
 } from 'src/db/schemas';
 import {
   BadRequestException,
@@ -37,17 +38,19 @@ import {
   sql,
   lt,
   max,
+  notInArray,
 } from 'drizzle-orm';
 import type { ApiResponse, Pagination } from 'src/lib/types';
 import { ApiStatus } from 'src/lib/enums';
 import type { ProductInResponse, ProductsInResponse } from './types';
-import { calcPagination, maskName } from 'src/lib/utils';
+import { calcPagination, deleteFile, maskName } from 'src/lib/utils';
 import { JobsQueueService } from 'src/background-jobs/jobs.service';
 import { ProductsGateway } from './products.gateway';
 import { BidsWsResponse } from './types/bids-response.type';
 import * as dayjs from 'dayjs';
 import { SubscriptionPlansService } from 'src/app/store-config/services';
 import { PaginationDTO } from 'src/lib/DTOs';
+import * as path from 'path';
 
 @Injectable()
 export class ProductsService {
@@ -578,15 +581,86 @@ export class ProductsService {
   async updateProduct(
     userId: number,
     udpateProductDto: UpdateProductDto,
+    images: Array<Express.Multer.File>,
   ): ApiResponse {
     const id = udpateProductDto.id;
     //@ts-ignore
     delete udpateProductDto.id;
 
-    await this.db
-      .update(products)
-      .set(udpateProductDto)
-      .where(and(eq(products.sellerId, userId), eq(products.id, id)));
+    let imageUpdate = !!udpateProductDto.sortedImages;
+    let imagesToDel: any[] = [];
+
+    const updatedProduct = await this.db.transaction(async (tx) => {
+      // saving the product
+      const [updatedProduct] = await tx
+        .update(products)
+        .set(udpateProductDto)
+        .where(and(eq(products.id, id), eq(products.sellerId, userId)))
+        .returning({
+          id: products.id,
+          isAuction: products.isAuction,
+          endDate: products.endDate,
+        });
+
+      if (!updatedProduct) throw new NotFoundException("Product doesn't exist");
+
+      if (!imageUpdate) return updatedProduct;
+
+      const imagesToSpare: string[] = [];
+      const updatedImages: ProductImage[] = udpateProductDto.sortedImages.map(
+        (v) => {
+          if (v.url) {
+            imagesToSpare.push(v.url);
+            return { productId: id, url: v.url };
+          }
+          {
+            return {
+              productId: id,
+              url:
+                '/' + images.find((q) => q.originalname === v.filename)?.path,
+            };
+          }
+        },
+      );
+
+      imagesToDel = await this.db
+        .select({ url: productImages.url })
+        .from(productImages)
+        .where(
+          and(
+            eq(productImages.productId, id),
+            notInArray(productImages.url, imagesToSpare),
+          ),
+        );
+      imagesToDel = imagesToDel.map((v) => v.url);
+
+      // deleting old images
+      await tx
+        .delete(productImages)
+        .where(eq(productImages.productId, id))
+        .returning();
+
+      // saving new images
+      await tx.insert(productImages).values(updatedImages);
+    });
+
+    // Deleting the discarded image files
+    imagesToDel.forEach(async (url) => {
+      await deleteFile(path.join(process.cwd(), url));
+    });
+
+    // updating the auction queue job
+    if (updatedProduct && updatedProduct.isAuction) {
+      if (udpateProductDto.endDate && udpateProductDto.status === 'live') {
+        // adding product to auctions queue
+        await this.jobsQueueService.addAuctionEndJob(
+          updatedProduct.id,
+          updatedProduct.endDate as any as string,
+        );
+      } else if (udpateProductDto.status !== 'live') {
+        await this.jobsQueueService.removeAuctionEndJob(updatedProduct.id);
+      }
+    }
 
     return {
       statusCode: HttpStatus.OK,
@@ -595,7 +669,6 @@ export class ProductsService {
       data: {},
     };
   }
-
   async getMyOffers(
     userId: number,
     type: 'active' | 'previous',
